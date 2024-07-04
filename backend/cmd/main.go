@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/blockchaindev100/todo/models"
+	"github.com/gin-gonic/gin"
 )
 
 type Roles struct {
@@ -31,26 +30,12 @@ type Users struct {
 }
 
 func main() {
-	dsn := "host=localhost user=postgres password=password dbname=TODO port=5432 sslmode=disable TimeZone=Asia/Shanghai"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := models.InitDB()
+
 	if err != nil {
-		fmt.Println("Error\n", err)
-	}
-	// var users Users
-	// var roles Roles
-	// var todo Todo
-
-	err1 := db.Raw("select * from  users")
-	// err2 := db.Raw("select * from roles").Scan(&roles)
-	// err3 := db.Raw("Select * from todo").Scan(&todo)
-
-	if err1 != nil {
-		// fmt.Println("Error", err1, err2, err3)
-		log.Fatalf("%#v", err1)
-		// fmt.Println(string(err1))
+		log.Fatal(err)
 	}
 
-	// fmt.Printf("%#v\n", users)
-	// fmt.Printf("%s\n", roles)
-	// fmt.Printf("%s\n", todo)
+	router := gin.Default()
+
 }
