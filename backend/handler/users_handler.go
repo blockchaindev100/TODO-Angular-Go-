@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/blockchaindev100/todo/models"
+	"github.com/blockchaindev100/todo/repository"
 	"github.com/blockchaindev100/todo/service"
 	"github.com/gin-gonic/gin"
 )
 
 func GetUsersRoute(c *gin.Context) {
-	data, err := service.GetUsers()
+	data, err := repository.GetUsers()
 	if err != nil {
 		fmt.Println(err)
 		c.IndentedJSON(http.StatusInternalServerError, "Error")
@@ -21,7 +22,7 @@ func GetUsersRoute(c *gin.Context) {
 
 func GetUserByIdRoute(c *gin.Context) {
 	id := c.Param("id")
-	data, err := service.GetUser(id)
+	data, err := repository.GetUser(id)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, "User Not Found")
 		return
@@ -37,7 +38,7 @@ func CreateUserRoute(c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, "Error: internal error")
 		return
 	}
-	errInCreateUser := service.CreateUsers(&data)
+	errInCreateUser := repository.CreateUsers(&data)
 	if errInCreateUser != nil {
 		c.IndentedJSON(http.StatusInternalServerError, "Can't create User")
 		return
@@ -47,7 +48,7 @@ func CreateUserRoute(c *gin.Context) {
 }
 
 func DeleteUserRoute(c *gin.Context) {
-	err := service.DeleteUser(c.Param("id"))
+	err := repository.DeleteUser(c.Param("id"))
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, "Id not found")
 		return

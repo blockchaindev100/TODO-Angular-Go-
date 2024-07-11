@@ -2,13 +2,13 @@ package routes
 
 import (
 	"github.com/blockchaindev100/todo/handler"
-	"github.com/blockchaindev100/todo/service"
+	"github.com/blockchaindev100/todo/repository"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func SetUpRoutes(router *gin.Engine, db *gorm.DB) {
-	service.SetDB(db)
+	repository.SetDB(db)
 	userRoutes := router.Group("/users")
 	userRoutes.GET("/", handler.GetUsersRoute)
 	userRoutes.GET("/:id", handler.GetUserByIdRoute)
