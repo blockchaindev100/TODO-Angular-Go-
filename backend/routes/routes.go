@@ -10,15 +10,19 @@ import (
 func SetUpRoutes(router *gin.Engine, db *gorm.DB) {
 	repository.SetDB(db)
 	userRoutes := router.Group("/users")
-	userRoutes.GET("/", handler.GetUsersRoute)
-	userRoutes.GET("/:id", handler.GetUserByIdRoute)
-	userRoutes.POST("/", handler.CreateUserRoute)
-	userRoutes.DELETE("/:id", handler.DeleteUserRoute)
+	{
+		userRoutes.GET("/", handler.GetUsers)
+		userRoutes.GET("/:id", handler.GetUserById)
+		userRoutes.POST("/", handler.CreateUser)
+		userRoutes.DELETE("/:id", handler.DeleteUser)
+	}
 	todoRoutes := router.Group("/todo")
-	todoRoutes.GET("/", handler.GetTodoRoute)
-	todoRoutes.GET("/:id", handler.GetTodoByIdRoute)
-	todoRoutes.POST("/", handler.CreateTodoRoute)
-	todoRoutes.DELETE("/:id", handler.DeleteTodoRoute)
-	todoRoutes.PUT("/:id", handler.UpdateTodoByIdRoute)
+	{
+		todoRoutes.GET("/", handler.GetTodo)
+		todoRoutes.GET("/:id", handler.GetTodoById)
+		todoRoutes.POST("/", handler.CreateTodo)
+		todoRoutes.DELETE("/:id", handler.DeleteTodo)
+		todoRoutes.PUT("/:id", handler.UpdateTodoById)
+	}
 
 }

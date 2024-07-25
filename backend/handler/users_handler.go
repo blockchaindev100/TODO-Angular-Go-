@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetUsersRoute(c *gin.Context) {
+func GetUsers(c *gin.Context) {
 	data, err := repository.GetUsers()
 	if err != nil {
 		fmt.Println(err)
@@ -20,7 +20,7 @@ func GetUsersRoute(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, data)
 }
 
-func GetUserByIdRoute(c *gin.Context) {
+func GetUserById(c *gin.Context) {
 	id := c.Param("id")
 	data, err := repository.GetUser(id)
 	if err != nil {
@@ -30,7 +30,7 @@ func GetUserByIdRoute(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, data)
 }
 
-func CreateUserRoute(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 	var data models.Users
 	err := c.BindJSON(&data)
 	fmt.Println(err)
@@ -47,10 +47,10 @@ func CreateUserRoute(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, "User created successfully")
 }
 
-func DeleteUserRoute(c *gin.Context) {
+func DeleteUser(c *gin.Context) {
 	err := repository.DeleteUser(c.Param("id"))
 	if err != nil {
-		c.IndentedJSON(http.StatusNotFound, "Id not found")
+		c.IndentedJSON(http.StatusNotFound, err)
 		return
 	}
 	c.IndentedJSON(http.StatusOK, "Deleted successfully")

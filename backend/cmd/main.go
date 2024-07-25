@@ -19,6 +19,9 @@ func main() {
 
 	routes.SetUpRoutes(router, db)
 
-	router.Run("localhost:8000")
+	err = router.Run("localhost:8000")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }

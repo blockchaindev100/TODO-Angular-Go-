@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/blockchaindev100/todo/models"
@@ -8,9 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetTodoRoute(c *gin.Context) {
+func GetTodo(c *gin.Context) {
 	var user models.Users
-	c.Bind(&user)
+	c.BindJSON(&user)
+	fmt.Println(user.Id)
 	data, err := repository.GetTodo(user.Id)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, "Can't get todo")
@@ -19,9 +21,9 @@ func GetTodoRoute(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, data)
 }
 
-func GetTodoByIdRoute(c *gin.Context) {
+func GetTodoById(c *gin.Context) {
 	var user models.Users
-	c.Bind(&user)
+	c.BindJSON(&user)
 	id := c.Param("id")
 	data, err := repository.GetTodoByID(user.Id, id)
 	if err != nil {
@@ -31,9 +33,9 @@ func GetTodoByIdRoute(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, data)
 }
 
-func CreateTodoRoute(c *gin.Context) {
+func CreateTodo(c *gin.Context) {
 	var todo models.Todo
-	c.Bind(&todo)
+	c.BindJSON(&todo)
 	err := repository.CreateTodo(&todo)
 
 	if err != nil {
@@ -43,10 +45,21 @@ func CreateTodoRoute(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, "Todo created successfully")
 }
 
-func DeleteTodoRoute(c *gin.Context) {
-
+func DeleteTodo(c *gin.Context) {
+	id := c.Param("id")
+	err := repository.DeleteTodo(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+	}
+	c.IndentedJSON(http.StatusOK, "Todo deleted successfully")
 }
 
-func UpdateTodoByIdRoute(c *gin.Context) {
-
+func UpdateTodoById(c *gin.Context) {
+	var data models.Todo
+	c.BindJSON(&data)
+	err := repository.UpdateTodo(&data)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, "Todo not updated")
+	}
+	c.IndentedJSON(http.StatusOK, data)
 }

@@ -10,32 +10,35 @@ import (
 func GetUsers() ([]models.Users, error) {
 	var users []models.Users
 
-	err := DB.Raw("select * from users").Scan(&users).Error
+	result := DB.Where("active=?", "true").Find(&users)
 
-	return users, err
+	return users, result.Error
 }
 
 func GetUser(id string) (models.Users, error) {
 	var user models.Users
 
-	err := DB.Raw("select * from users where id=?", id).Scan(&user).Error
+	result := DB.Where("active=? AND id=?", "true", id).First(&user)
 
-	return user, err
+	return user, result.Error
 }
 
 func CreateUsers(data *models.Users) error {
 	uuidVal := service.GenerateUUID()
-	var createdUser models.Users
-	err := DB.Raw("insert into users (id,name,email,roleid,verification_code,is_verified) values (?,?,?,?,?,?)", uuidVal, data.Name, data.Email, data.Roleid, data.Verification_code, data.Is_verified).Scan(&createdUser).Error
+	data.Id = uuidVal
+	data.Active = true
+	result := DB.Create(data)
 
-	return err
+	return result.Error
 }
 
 func DeleteUser(id string) error {
-	err := DB.Exec("delete from users where id=?", id)
-	if err.RowsAffected == 0 {
-		return errors.New("no_rows_affected")
+	var user models.Users
+	DB.Where("active=? AND id=?", true, id).First(&user)
+	if !user.Active {
+		return errors.New("user is doesn't exist")
 	}
-
-	return err.Error
+	user.Active = false
+	result := DB.Save(&user)
+	return result.Error
 }

@@ -20,4 +20,5 @@ type Users struct {
 	Roleid            int
 	Verification_code string
 	Is_verified       bool
+	Active            bool
 }
